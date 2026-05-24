@@ -20,7 +20,6 @@
 }
 
 body {
-  line-height: 1.5;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -48,18 +47,6 @@ h4,
 h5,
 h6 {
   overflow-wrap: break-word;
-}
-
-p {
-  text-wrap: pretty;
-}
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  text-wrap: balance;
 }
 
 #root,
@@ -90,21 +77,223 @@ h6 {
   --heading: system-ui, "Segoe UI", Roboto, sans-serif;
   --mono: ui-monospace, Consolas, monospace;
 
-  font: 20px/145% var(--sans);
+  color: var(--color-neutral);
+  font-family: var(--sans);
+  font-weight: 600;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-
-  @media (max-width: 1024px) {
-    font-size: 16px;
-  }
 }
 
 .attribution {
+  margin-block: 2rem 1rem;
   font-size: 0.6875rem;
   text-align: center;
 }
 .attribution a {
   color: hsl(228, 45%, 44%);
+}
+
+.background {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -10;
+
+  & > * {
+    position: absolute;
+  }
+
+  .background-image {
+    bottom: 0;
+    right: 0;
+  }
+
+  .squiggly-line {
+    &.top {
+      height: 3rem;
+      top: 1.5rem;
+      right: 0;
+    }
+    &.bottom {
+      position: fixed;
+      bottom: 0;
+      height: 13rem;
+    }
+  }
+
+  .patterns::after {
+    content: "";
+    position: absolute;
+    width: 100vw;
+    height: 65vh;
+    background-image: url("/images/pattern-lines.svg");
+    background-repeat: repeat-x;
+    background-size: 1000px;
+  }
+
+  .pattern-circle {
+    position: fixed;
+    aspect-ratio: 1/1;
+    width: 7rem;
+    top: 70%;
+    left: 82%;
+    /* border: 1px solid red; */
+  }
+
+  @media (width >= 720px) {
+    .squiggly-line {
+      &.top {
+        height: unset;
+      }
+      &.bottom {
+        height: unset;
+      }
+    }
+
+    .pattern-circle {
+      top: 50%;
+      left: 65%;
+      width: fit-content;
+    }
+
+    .patterns::after {
+      background-size: unset;
+    }
+  }
+}
+
+main {
+  display: grid;
+  place-items: center;
+  overscroll-behavior: none;
+
+  .logo {
+    height: 1.5rem;
+    margin-block-start: 2rem;
+    margin-block-end: 2.5rem;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  .heading {
+    font-size: 1.75em;
+    font-weight: 800;
+    padding-inline: 1rem;
+    text-align: center;
+  }
+
+  .subtitle {
+    font-size: 1.25em;
+    padding: 1.5rem 2rem;
+    text-align: center;
+    color: var(--color-neutral-500);
+  }
+
+  @media (width >= 720px) {
+    .logo {
+      height: 1.75rem;
+    }
+    .heading {
+      font-size: 3.25em;
+      max-width: 30ch;
+    }
+  }
+}
+
+form {
+  --border: hsl(from var(--color-neutral-300) h s l / 30%);
+  --bg: hsl(from var(--color-neutral-300) h s l / 10%);
+  --border-radius: 0.75rem;
+
+  display: grid;
+  max-width: 30rem;
+  width: 100%;
+  padding: 1rem;
+
+  label,
+  .label {
+    font-size: 1.125em;
+  }
+  label {
+    padding-block-start: 1.75rem;
+    padding-block-end: 0.75rem;
+  }
+
+  .upload-container {
+    display: grid;
+    gap: 1rem;
+    place-items: center;
+
+    padding-block: 1rem;
+    padding-inline: 1.5rem;
+    margin-block: 0.75rem;
+
+    border: 2px dashed var(--border);
+    border-radius: 0.75rem;
+    background: var(--bg);
+
+    .avatar-container {
+      padding: 0.5rem;
+      display: grid;
+      place-items: center;
+
+      border: 1px solid var(--bg);
+      border-radius: var(--border-radius);
+      background: var(--bg);
+      aspect-ratio: 1/1;
+      width: fit-content;
+    }
+    p {
+      font-size: 1.125em;
+      font-weight: bold;
+      color: var(--color-neutral-500);
+    }
+  }
+
+  small {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--color-neutral-500);
+    font-size: 0.6875rem;
+    font-weight: bold;
+  }
+
+  input {
+    border: 2px solid var(--border);
+    border-radius: var(--border-radius);
+    background: var(--bg);
+    padding: 1rem;
+    color: inherit;
+    /* font-weight: bold; */
+  }
+
+  .submit-button {
+    padding: 1rem;
+    margin-block: 1.5rem;
+    background-color: var(--color-orange-500);
+    color: var(--color-neutral-900);
+    border: none;
+    border-radius: var(--border-radius);
+    font-weight: 800;
+    font-size: 1.25em;
+
+    &:hover {
+      background-color: var(--color-orange-700);
+    }
+  }
+
+  @media (width >= 720px) {
+    label,
+    .label {
+      font-size: 1.125em;
+    }
+  }
 }
