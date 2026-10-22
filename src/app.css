@@ -71,7 +71,7 @@ h6 {
   --color-orange-500: hsl(7, 88%, 67%);
   --color-orange-700: hsl(7, 71%, 60%);
 
-  --text-gradient: hsl(7, 86%, 67%) to hsl(0, 0%, 100%);
+  --text-gradient: from hsl(7, 86%, 67%) to hsl(0, 0%, 100%);
 
   --sans: "Inconsolata", sans-serif;
   --heading: system-ui, "Segoe UI", Roboto, sans-serif;
@@ -187,13 +187,129 @@ main {
     font-weight: 800;
     padding-inline: 1rem;
     text-align: center;
+
+    span {
+      color: transparent;
+      background-color: linear-gradient(var(--text-gradient));
+      background-clip: text;
+    }
   }
 
   .subtitle {
-    font-size: 1.25em;
+    font-size: 1.2em;
     padding: 1.5rem 2rem;
     text-align: center;
-    color: var(--color-neutral-500);
+    color: var(--color-neutral-300);
+
+    span {
+      color: var(--color-orange-500);
+    }
+  }
+
+  .ticket {
+    display: flex;
+    position: relative;
+    justify-content: space-between;
+    background: url("/images/pattern-ticket.svg");
+    background-size: contain;
+    background-repeat: no-repeat;
+    padding: 1.125rem 1rem;
+    width: calc(100% - 2rem);
+    max-width: 20rem;
+    margin-top: 2.75rem;
+
+    *.flex {
+      display: flex;
+      align-items: start;
+    }
+
+    .details {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      justify-content: space-between;
+
+      .header {
+        gap: 1rem;
+
+        img {
+          width: 1.75rem;
+        }
+
+        .stack {
+          display: grid;
+          gap: 0.5rem;
+          align-items: start;
+
+          .org {
+            font-size: 1.5em;
+            font-weight: bold;
+            text-box-trim: trim-start;
+          }
+          .details {
+            font-size: 0.925em;
+            color: hsl(from var(--color-neutral-300) h s l / 80%);
+          }
+        }
+      }
+
+      .footer {
+        gap: 0.75rem;
+        .avatar-container {
+          aspect-ratio: square;
+          width: 2.75rem;
+          border-radius: 0.5rem;
+          overflow: hidden;
+
+          img {
+            width: 100%;
+            object-fit: cover;
+          }
+        }
+
+        .stack {
+          display: grid;
+          gap: 0.25rem;
+          align-items: start;
+
+          .name {
+            font-size: 1.2em;
+            font-weight: 500;
+
+            max-width: 15ch;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+          }
+
+          img {
+            aspect-ratio: 1/1;
+            width: 0.975rem;
+          }
+
+          .github {
+            display: flex;
+            gap: 0.25rem;
+            align-items: center;
+
+            font-size: 0.9em;
+            color: hsl(from var(--color-neutral-300) h s l / 80%);
+          }
+        }
+      }
+    }
+
+    .tail {
+      position: absolute;
+      right: 0;
+      top: 50%;
+      translate: 0% -50%;
+      rotate: 90deg;
+      transform-origin: center;
+      font-size: 1.325em;
+      font-weight: 500;
+      color: var(--color-neutral-500);
+    }
   }
 
   @media (width >= 720px) {

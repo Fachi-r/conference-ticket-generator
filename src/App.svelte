@@ -1,12 +1,18 @@
 <script lang="ts">
   // form data bindings
-  let name = $state("");
-  let email = $state("");
-  let github = $state("");
+  // let name = $state("");
+  // let email = $state("");
+  // let github = $state("");
+  // let avatar: string | ArrayBuffer | null = $state(null);
   let avatarInput: HTMLInputElement | null = $state(null);
   let imageEl: HTMLImageElement | null = $state(null);
-  let avatar: string | ArrayBuffer | null = $state(null);
-  let valid = $state(false);
+
+  let name = $state("Jonatan Kristof");
+  let email = $state("jonatan@email.com");
+  let github = $state("@jonatankristof0101");
+  let avatar: string | ArrayBuffer | null = $state("./slkjd");
+
+  let valid = $state(true);
 
   const defaultUploadImage = "/images/icon-upload.svg";
 
@@ -55,10 +61,18 @@
   }
 
   function handleSubmit(
-    e: MouseEvent & { currentTarget: EventTarget & HTMLButtonElement },
+    e: (MouseEvent | SubmitEvent) & {
+      currentTarget: EventTarget & HTMLElement;
+    },
   ) {
     e.preventDefault();
+    e.stopPropagation();
+
+    // Do some validation
+
     console.log(e?.currentTarget);
+
+    valid = !valid;
   }
 </script>
 
@@ -127,7 +141,7 @@
 
   {#if !valid}
     <!-- Form starts -->
-    <form>
+    <form onsubmit={handleSubmit}>
       <p class="label">Upload Avatar</p>
 
       <div
@@ -200,9 +214,41 @@
     </form>
 
     <!-- Form ends -->
-  {:else}
+  {:else if avatar}
     <!-- Generated tickets starts -->
-    Coding Conf Jan 31, 2025 / Austin, TX
+    <div class="ticket">
+      <div class="details">
+        <div class="header flex">
+          <img src="/images/logo-mark.svg" alt="Logo Mark" />
+
+          <div class="stack">
+            <p class="org">Coding Conf</p>
+            <p class="details">Jan 31, 2025 / Austin, TX</p>
+          </div>
+        </div>
+
+        <div class="footer flex">
+          <!-- <img src={String(avatar)} alt="Avatar" /> -->
+          <div class="avatar-container">
+            <img src="/images/image-avatar.jpg" alt="Avatar" />
+          </div>
+
+          <div class="stack">
+            <p class="name">
+              {name}
+            </p>
+            <p class="github flex">
+              <img src="/images/icon-github.svg" alt="github logo" />
+              {github}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="tail">
+        #{Math.floor(Math.random() * 100000)}
+      </div>
+    </div>
     <!-- Generated tickets ends -->
   {/if}
 </main>
