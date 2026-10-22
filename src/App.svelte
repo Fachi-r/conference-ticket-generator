@@ -1,31 +1,64 @@
 <script lang="ts">
-  function handleSubmit(e: any) {
-    console.log(e?.currentTarget?.value);
-  }
-
   // form data bindings
   let name = $state("");
   let email = $state("");
   let github = $state("");
   let avatarInput: HTMLInputElement | null = $state(null);
-  let avatar: File | null = $state(null);
-
+  let imageEl: HTMLImageElement | null = $state(null);
+  let avatar: string | ArrayBuffer | null = $state(null);
   let valid = $state(false);
 
-  // $inspect(avatarInput).with((t, v) => {
-  //   if (t !== "init") console.log("avatar", v);
-  // });
-
-  $inspect(avatar);
+  const defaultUploadImage = "/images/icon-upload.svg";
 
   function handleUpload(
     event: Event & { currentTarget: EventTarget & HTMLInputElement },
   ) {
     let files = event.currentTarget.files;
-    if (files) {
-      avatar = files[0];
-    }
-    // console.log(event.currentTarget.value);
+    if (!files) return;
+
+    let file = files[0];
+
+    const reader = new FileReader();
+    reader.addEventListener("load", function () {
+      avatar = reader.result;
+      imageEl?.setAttribute("src", String(avatar));
+    });
+    reader.readAsDataURL(file);
+  }
+
+  function handleKeydown(
+    event: KeyboardEvent & { currentTarget: EventTarget & HTMLDivElement },
+  ) {
+    if (event.key === "Enter") avatarInput?.click();
+    if (event.key === "Escape") removeImg(event);
+  }
+
+  function removeImg(
+    event: (MouseEvent | KeyboardEvent) & {
+      currentTarget: EventTarget & HTMLElement;
+    },
+  ) {
+    event.preventDefault();
+    event.stopPropagation();
+    imageEl?.setAttribute("src", defaultUploadImage);
+    avatar = null;
+  }
+
+  function changeImg(
+    event: (MouseEvent | KeyboardEvent) & {
+      currentTarget: EventTarget & HTMLElement;
+    },
+  ) {
+    event.preventDefault();
+    event.stopPropagation();
+    avatarInput?.click();
+  }
+
+  function handleSubmit(
+    e: MouseEvent & { currentTarget: EventTarget & HTMLButtonElement },
+  ) {
+    e.preventDefault();
+    console.log(e?.currentTarget);
   }
 </script>
 
@@ -97,9 +130,12 @@
     <form>
       <p class="label">Upload Avatar</p>
 
-      <button
-        type="button"
+      <div
+        tabindex="0"
+        role="button"
+        onkeydown={handleKeydown}
         class="upload-container"
+        class:hidden={avatar}
         onclick={() => avatarInput?.click()}
       >
         <input
@@ -113,12 +149,26 @@
         />
         <div class="avatar-container">
           <img
-            src={avatar ? avatar.webkitRelativePath : "/images/icon-upload.svg"}
+            bind:this={imageEl}
+            src={defaultUploadImage}
+            class:default={!avatar}
             alt="Avatar"
           />
         </div>
-        <p>Drag and drop or click to upload</p>
-      </button>
+
+        <div class="flex">
+          {#if avatar}
+            <button type="button" class="btn" onclick={removeImg}>
+              Remove image
+            </button>
+            <button type="button" class="btn" onclick={changeImg}>
+              Change image
+            </button>
+          {:else}
+            <p>Drag and drop or click to upload</p>
+          {/if}
+        </div>
+      </div>
 
       <small>
         <img src="/images/icon-info.svg" alt="" />

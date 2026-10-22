@@ -240,16 +240,42 @@ form {
     background: var(--bg);
 
     .avatar-container {
-      padding: 0.5rem;
       display: grid;
       place-items: center;
 
-      border: 1px solid var(--bg);
+      border: 1px solid var(--border);
       border-radius: var(--border-radius);
       background: var(--bg);
       aspect-ratio: 1/1;
-      width: fit-content;
+      width: 3rem;
+      overflow: hidden;
+
+      img {
+        object-fit: cover;
+        width: 100%;
+        height: 100%;
+
+        &.default {
+          padding: 0.5rem;
+        }
+      }
     }
+
+    .flex button {
+      background: var(--bg);
+      color: var(--color-neutral-300);
+      border: none;
+      border-radius: 0.25rem;
+      padding: 0.25rem 0.5rem;
+      font-size: 0.75em;
+      cursor: pointer;
+
+      &:first-of-type {
+        color: hsl(from var(--color-neutral-300) h s l / 80%);
+        text-decoration: underline;
+      }
+    }
+
     p {
       font-size: 1.125em;
       font-weight: bold;
@@ -267,12 +293,11 @@ form {
   }
 
   input {
-    border: 2px solid var(--border);
+    border: 1px solid var(--border);
     border-radius: var(--border-radius);
     background: var(--bg);
     padding: 1rem;
-    color: inherit;
-    /* font-weight: bold; */
+    color: hsl(from var(--color-neutral) h s l / 80%);
   }
 
   .submit-button {
