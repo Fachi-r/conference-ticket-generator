@@ -1,25 +1,25 @@
 <script lang="ts">
   // form data bindings
-  // let name = $state("");
-  // let email = $state("");
-  // let github = $state("");
-  // let avatar: string | ArrayBuffer | null = $state(null);
+  let name = $state("");
+  let email = $state("");
+  let github = $state("");
+  let avatar: string | ArrayBuffer | null = $state(null);
   let avatarInput: HTMLInputElement | null = $state(null);
   let imageEl: HTMLImageElement | null = $state(null);
 
-  let name = $state("Jonatan Kristof");
-  let email = $state("jonatan@email.com");
-  let github = $state("@jonatankristof0101");
-  let avatar: string | ArrayBuffer | null = $state("./slkjd");
+  // let name = $state("Jonatan Kristof");
+  // let email = $state("jonatan@email.com");
+  // let github = $state("@jonatankristof0101");
+  // let avatar: string | ArrayBuffer | null = $state("/images/image-avatar.jpg");
 
-  let valid = $state(true);
+  let valid = $state(false);
 
   const defaultUploadImage = "/images/icon-upload.svg";
 
   function handleUpload(
     event: Event & { currentTarget: EventTarget & HTMLInputElement },
   ) {
-    let files = event.currentTarget.files;
+    const files = event.currentTarget.files;
     if (!files) return;
 
     let file = files[0];
@@ -84,7 +84,7 @@
     <img
       class="background-image"
       src="/images/background-mobile.png"
-      alt=""
+      alt="Background"
       aria-hidden="true"
     />
   </picture>
@@ -111,6 +111,9 @@
 
   <!--patterns -->
   <div class="patterns">
+    <div class="pattern-circle">
+      <img src="/images/pattern-circle.svg" alt="" aria-hidden="true" />
+    </div>
     <div class="pattern-circle">
       <img src="/images/pattern-circle.svg" alt="" aria-hidden="true" />
     </div>
@@ -228,9 +231,8 @@
         </div>
 
         <div class="footer flex">
-          <!-- <img src={String(avatar)} alt="Avatar" /> -->
           <div class="avatar-container">
-            <img src="/images/image-avatar.jpg" alt="Avatar" />
+            <img src={String(avatar)} alt="Avatar" />
           </div>
 
           <div class="stack">
