@@ -71,7 +71,7 @@ h6 {
   --color-orange-500: hsl(7, 88%, 67%);
   --color-orange-700: hsl(7, 71%, 60%);
 
-  --text-gradient: from hsl(7, 86%, 67%) to hsl(0, 0%, 100%);
+  --text-gradient: 45deg, hsl(7, 86%, 67%), hsl(0, 0%, 100%);
 
   --sans: "Inconsolata", sans-serif;
   --heading: system-ui, "Segoe UI", Roboto, sans-serif;
@@ -190,19 +190,21 @@ main {
 
     span {
       color: transparent;
-      background-color: linear-gradient(var(--text-gradient));
+      background: linear-gradient(var(--text-gradient));
       background-clip: text;
     }
   }
 
   .subtitle {
     font-size: 1.2em;
-    padding: 1.5rem 2rem;
+    padding: 1.5rem 1rem;
     text-align: center;
     color: var(--color-neutral-300);
+    max-width: 48ch;
+    margin-block-end: 2.75rem;
 
     span {
-      color: var(--color-orange-500);
+      color: hsl(from var(--color-orange-500) h calc(s - 10) calc(l + 5) / 80%);
     }
   }
 
@@ -213,10 +215,13 @@ main {
     background: url("/images/pattern-ticket.svg");
     background-size: contain;
     background-repeat: no-repeat;
+
     padding: 1.125rem 1rem;
     width: calc(100% - 2rem);
-    max-width: 20rem;
-    margin-top: 2.75rem;
+    aspect-ratio: 16/7.5;
+    max-width: 38rem;
+
+    /* border: 1px solid green; */
 
     *.flex {
       display: flex;
@@ -268,13 +273,16 @@ main {
         }
 
         .stack {
-          display: grid;
+          display: flex;
+          flex-direction: column;
           gap: 0.25rem;
-          align-items: start;
+          justify-content: center;
+          height: 100%;
 
           .name {
             font-size: 1.2em;
             font-weight: 500;
+            letter-spacing: -1px;
 
             max-width: 15ch;
             text-overflow: ellipsis;
@@ -293,7 +301,8 @@ main {
             align-items: center;
 
             font-size: 0.9em;
-            color: hsl(from var(--color-neutral-300) h s l / 80%);
+            font-weight: 500;
+            color: var(--color-neutral-300);
           }
         }
       }
@@ -314,11 +323,71 @@ main {
 
   @media (width >= 720px) {
     .logo {
-      height: 1.75rem;
+      height: 1.825rem;
+      margin-block-start: 2.5rem;
+      margin-block-end: 4rem;
     }
     .heading {
-      font-size: 3.25em;
+      font-size: 3.6em;
       max-width: 30ch;
+    }
+    .subtitle {
+      font-size: 1.5em;
+      line-height: 1.2;
+      margin-block-start: 0.5rem;
+      margin-block-end: 5rem;
+    }
+
+    .ticket {
+      padding: 1.75rem 1.5rem;
+      .details {
+        .header {
+          img {
+            width: 2.5rem;
+          }
+
+          .stack {
+            .org {
+              font-size: 2.5em;
+              /* text-box-trim: trim-start; */
+            }
+            .details {
+              font-size: 1.2em;
+            }
+          }
+        }
+
+        .footer {
+          gap: 1rem;
+
+          .avatar-container {
+            width: 5rem;
+            border-radius: 0.75rem;
+          }
+
+          .stack {
+            gap: 0.5rem;
+
+            .name {
+              font-size: 1.9em;
+            }
+
+            img {
+              width: 1.5rem;
+            }
+
+            .github {
+              gap: 0.5rem;
+              font-size: 1.2em;
+            }
+          }
+        }
+      }
+      .tail {
+        margin-right: 0.5rem;
+
+        font-size: 1.9em;
+      }
     }
   }
 }
