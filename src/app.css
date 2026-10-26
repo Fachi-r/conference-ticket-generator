@@ -204,8 +204,10 @@ main {
   }
 
   .heading {
-    font-size: 1.75em;
+    font-size: 1.9em;
     font-weight: 800;
+    letter-spacing: -1px;
+    line-height: 1.1;
     padding-inline: 1rem;
     text-align: center;
 
@@ -218,9 +220,11 @@ main {
 
   .subtitle {
     font-size: 1.2em;
-    padding: 1.5rem 1rem;
+    padding-block: 1.25rem 1.5rem;
+    padding-inline: 1rem;
     text-align: center;
     color: var(--color-neutral-300);
+    line-height: 1.25;
     /* max-width: 48ch; */
 
     span {
@@ -346,18 +350,19 @@ main {
 
   @media (width >= 720px) {
     .logo {
-      height: 1.85rem;
+      height: 1.875rem;
       margin-block-start: 2.5rem;
-      margin-block-end: 4rem;
+      margin-block-end: 3.75rem;
     }
     .heading {
-      font-size: 3.6em;
+      font-size: 3.65em;
+      line-height: 1.1;
       max-width: 30ch;
     }
     .subtitle {
-      font-size: 1.4em;
-      line-height: 1.2;
-      margin-block-start: 0.5rem;
+      font-size: 1.45em;
+      /* line-height: 1.2; */
+      /* margin-block-start: 0.25rem; */
       /* font-weight: normal; */
     }
 
@@ -416,7 +421,7 @@ main {
 }
 
 form {
-  --border: hsl(from var(--color-neutral-300) h s l / 30%);
+  --border: hsl(from var(--color-neutral-300) h s l / 50%);
   --bg: hsl(from var(--color-neutral-300) h s l / 10%);
   --border-radius: 0.75rem;
 
@@ -427,10 +432,10 @@ form {
 
   label,
   .label {
-    font-size: 1.125em;
+    font-size: 1.225em;
   }
   label {
-    padding-block-start: 1.75rem;
+    padding-block-start: 1.5rem;
     padding-block-end: 0.75rem;
   }
 
@@ -439,7 +444,7 @@ form {
     gap: 1rem;
     place-items: center;
 
-    padding-block: 1rem;
+    padding-block: 1.125rem;
     padding-inline: 1.5rem;
     margin-block: 0.75rem;
 
@@ -447,16 +452,29 @@ form {
     border-radius: 0.75rem;
     background: var(--bg);
 
+    --blur: 2px;
+
+    backdrop-filter: blur(var(--blur));
+    -webkit-backdrop-filter: blur(var(--blur));
+
     .avatar-container {
       display: grid;
       place-items: center;
 
-      border: 1px solid var(--border);
+      border: 1px solid hsl(from var(--border) h s l / 20%);
       border-radius: var(--border-radius);
       background: var(--bg);
+      /* box-shadow: 0px 2px 2px hsl(0 0 0 / 30%); */
+
       aspect-ratio: 1/1;
       width: 3rem;
       overflow: hidden;
+
+      transition: all 0.3s ease;
+
+      &.active {
+        border: 1px solid var(--border);
+      }
 
       img {
         object-fit: cover;
@@ -474,8 +492,8 @@ form {
       color: var(--color-neutral-300);
       border: none;
       border-radius: 0.25rem;
-      padding: 0.25rem 0.5rem;
-      font-size: 0.75em;
+      padding: 0.275rem 0.5rem;
+      font-size: 0.7215em;
       cursor: pointer;
 
       &:first-of-type {
@@ -485,9 +503,9 @@ form {
     }
 
     p {
-      font-size: 1.125em;
-      font-weight: bold;
-      color: var(--color-neutral-500);
+      font-size: 1.1em;
+      font-weight: 500;
+      color: var(--color-neutral-300);
     }
   }
 
@@ -496,8 +514,10 @@ form {
     align-items: center;
     gap: 0.5rem;
     color: var(--color-neutral-500);
-    font-size: 0.6875rem;
+    font-size: 0.725em;
     font-weight: bold;
+
+    margin-bottom: 0.125rem;
   }
 
   input {
@@ -506,6 +526,18 @@ form {
     background: var(--bg);
     padding: 1rem;
     color: hsl(from var(--color-neutral) h s l / 80%);
+
+    font-size: 1.1em;
+    /* font-weight: 400; */
+
+    &::placeholder {
+      color: var(--color-neutral-300);
+      font-weight: 400;
+    }
+
+    &:not(&:last-of-type) {
+      margin-bottom: 0.125rem;
+    }
   }
 
   .submit-button {
@@ -526,7 +558,7 @@ form {
   @media (width >= 720px) {
     label,
     .label {
-      font-size: 1.125em;
+      font-size: 1.25em;
     }
   }
 }

@@ -1,16 +1,16 @@
 <script lang="ts">
   // form data bindings
-  let name = $state("");
-  let email = $state("");
-  let github = $state("");
-  let avatar: string | ArrayBuffer | null = $state(null);
+  // let name = $state("");
+  // let email = $state("");
+  // let github = $state("");
+  // let avatar: string | ArrayBuffer | null = $state(null);
   let avatarInput: HTMLInputElement | null = $state(null);
   let imageEl: HTMLImageElement | null = $state(null);
 
-  // let name = $state("Jonatan Kristof");
-  // let email = $state("jonatan@email.com");
-  // let github = $state("@jonatankristof0101");
-  // let avatar: string | ArrayBuffer | null = $state("/images/image-avatar.jpg");
+  let name = $state("Jonatan Kristof");
+  let email = $state("jonatan@email.com");
+  let github = $state("@jonatankristof0101");
+  let avatar: string | ArrayBuffer | null = $state("/images/image-avatar.jpg");
 
   let valid = $state(false);
 
@@ -164,7 +164,7 @@
           style:display="none"
           onchange={handleUpload}
         />
-        <div class="avatar-container">
+        <div class="avatar-container" class:active={!!avatar}>
           <img
             bind:this={imageEl}
             src={defaultUploadImage}
@@ -189,7 +189,7 @@
 
       <small>
         <img src="/images/icon-info.svg" alt="" />
-        Upload your photo (JPG or PNG, max size: 500KB).
+        Upload your photo (JPG or PNG, max size: 5MB).
       </small>
 
       <label for="fullname"> Full Name </label>
