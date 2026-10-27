@@ -133,12 +133,12 @@
       Congrats, <span>{name}</span>! Your ticket is ready.
     {/if}
   </h1>
-  <p class="subtitle">
+  <p class="subtitle" class:valid>
     {#if !valid}
       Secure your spot at next year's biggest coding conference.
     {:else}
-      We've emailed your ticket to <span>{email}</span> and will send updates in
-      the run up to the event.
+      We've emailed your ticket to <br /> <span>{email}</span> and will send updates
+      in the run up to the event.
     {/if}
   </p>
 
@@ -247,9 +247,10 @@
         </div>
       </div>
 
-      <div class="tail">
-        #{Math.floor(Math.random() * 100000)}
-      </div>
+      <div class="tail">#01609</div>
+      <!-- <div class="tail"> -->
+      <!--   #{Math.floor(Math.random() * 100000)} -->
+      <!-- </div> -->
     </div>
     <!-- Generated tickets ends -->
   {/if}
