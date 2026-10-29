@@ -1,18 +1,23 @@
 <script lang="ts">
-  // form data bindings
-  // let name = $state("");
-  // let email = $state("");
-  // let github = $state("");
-  // let avatar: string | ArrayBuffer | null = $state(null);
-  let avatarInput: HTMLInputElement | null = $state(null);
-  let imageEl: HTMLImageElement | null = $state(null);
+  // Form state
+    let avatar = $state<string | null>("");
+  let name = $state("");
+  let email = $state("");
+  let github = $state("");
 
-  let name = $state("Jonatan Kristof");
-  let email = $state("jonatan@email.com");
-  let github = $state("@jonatankristof0101");
-  let avatar: string | ArrayBuffer | null = $state("/images/image-avatar.jpg");
+  // UI state
+  let isValid = $state(false);
+  let avatarInput = $state<HTMLInputElement | null>(null);
 
-  let valid = $state(false);
+  const allowedTypes = ["image/png", "image/jpeg", "image/jpg"];
+
+  // Error state
+  let errors = $state({
+    name: "",
+    email: "",
+    github: "",
+    avatar: "",
+  });
 
   const defaultUploadImage = "/images/icon-upload.svg";
 
@@ -20,14 +25,29 @@
     event: Event & { currentTarget: EventTarget & HTMLInputElement },
   ) {
     const files = event.currentTarget.files;
-    if (!files) return;
+    if (!files || files.length === 0) return;
 
-    let file = files[0];
+    const file = files[0];
+
+    // 1. Validate Type
+    if (!allowedTypes.includes(file.type)) {
+      errors.avatar = "Only JPG and PNG images are allowed.";
+      return;
+    }
+
+    // 2. Validate Size (5MB)
+    const MAX_SIZE = 5 * 1024 * 1024;
+    if (file.size > MAX_SIZE) {
+      errors.avatar = "File too large. Please upload a photo under 5MB.";
+      return;
+    }
+
+    // Clear error and save file if valid
+    errors.avatar = "";
 
     const reader = new FileReader();
-    reader.addEventListener("load", function () {
-      avatar = reader.result;
-      imageEl?.setAttribute("src", String(avatar));
+    reader.addEventListener("load", () => {
+      avatar = reader.result as string;
     });
     reader.readAsDataURL(file);
   }
@@ -39,40 +59,75 @@
     if (event.key === "Escape") removeImg(event);
   }
 
-  function removeImg(
-    event: (MouseEvent | KeyboardEvent) & {
-      currentTarget: EventTarget & HTMLElement;
-    },
-  ) {
+  function removeImg(event: MouseEvent | KeyboardEvent) {
     event.preventDefault();
     event.stopPropagation();
-    imageEl?.setAttribute("src", defaultUploadImage);
     avatar = null;
+    errors.avatar = "";
+    if (avatarInput) avatarInput.value = ""; // Reset input so same file can be re-selected
   }
 
-  function changeImg(
-    event: (MouseEvent | KeyboardEvent) & {
-      currentTarget: EventTarget & HTMLElement;
-    },
-  ) {
+  function changeImg(event: MouseEvent | KeyboardEvent) {
     event.preventDefault();
     event.stopPropagation();
     avatarInput?.click();
   }
 
-  function handleSubmit(
-    e: (MouseEvent | SubmitEvent) & {
-      currentTarget: EventTarget & HTMLElement;
-    },
-  ) {
+  function validateForm(): boolean {
+    // Reset text errors
+    errors.name = "";
+    errors.email = "";
+    errors.github = "";
+    let isValid = true;
+
+    // Name validation
+    if (!name.trim()) {
+      errors.name = "Full Name is required.";
+      isValid = false;
+    } else if (name.trim().length < 2) {
+      errors.name = "Name must be at least 2 characters.";
+      isValid = false;
+    }
+
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email.trim()) {
+      errors.email = "Email Address is required.";
+      isValid = false;
+    } else if (!emailRegex.test(email.trim())) {
+      errors.email = "Please enter a valid email address.";
+      isValid = false;
+    }
+
+    // GitHub validation (strip optional leading '@' for UX)
+    const githubValue = github.trim().replace(/^@/, "");
+    const githubRegex = /^[a-zA-Z0-9](?:[a-zA-Z0-9]|-(?=[a-zA-Z0-9])){0,38}$/;
+    if (!githubValue) {
+      errors.github = "GitHub Username is required.";
+      isValid = false;
+    } else if (!githubRegex.test(githubValue)) {
+      errors.github = "Please provide a valid GitHub username.";
+      isValid = false;
+    } else {
+      github = githubValue
+    }
+
+    // Avatar validation (ensure one is actually present at submit time)
+    if (!avatar && !errors.avatar) {
+      errors.avatar = "Please upload an avatar.";
+      isValid = false;
+    }
+
+    return isValid;
+  }
+
+  function handleSubmit(e: SubmitEvent) {
     e.preventDefault();
     e.stopPropagation();
 
-    // Do some validation
-
-    console.log(e?.currentTarget);
-
-    valid = !valid;
+    if (validateForm()) {
+      isValid = true; // Only toggle to ticket view if valid
+    }
   }
 </script>
 
@@ -121,20 +176,20 @@
 </div>
 
 <main>
-  <!-- Logo -->
   <div class="logo">
     <img src="/images/logo-full.svg" alt="Logo" />
   </div>
 
   <h1 class="heading">
-    {#if !valid}
+    {#if !isValid}
       Your Journey to Coding Conf 2025 Starts Here!
     {:else}
       Congrats, <span>{name}</span>! Your ticket is ready.
     {/if}
   </h1>
-  <p class="subtitle" class:valid>
-    {#if !valid}
+
+  <p class="subtitle" class:isValid>
+    {#if !isValid}
       Secure your spot at next year's biggest coding conference.
     {:else}
       We've emailed your ticket to <br /> <span>{email}</span> and will send updates
@@ -142,8 +197,7 @@
     {/if}
   </p>
 
-  {#if !valid}
-    <!-- Form starts -->
+  {#if !isValid}
     <form onsubmit={handleSubmit}>
       <p class="label">Upload Avatar</p>
 
@@ -152,22 +206,23 @@
         role="button"
         onkeydown={handleKeydown}
         class="upload-container"
-        class:hidden={avatar}
+        class:hidden={!!avatar}
+        class:error-input={!!errors.avatar}
         onclick={() => avatarInput?.click()}
       >
         <input
           bind:this={avatarInput}
           id="avatar"
           type="file"
-          accept="image/png, image/jpeg, image/jpg"
+          accept={allowedTypes.join(", ")}
           aria-hidden="true"
           style:display="none"
           onchange={handleUpload}
         />
+
         <div class="avatar-container" class:active={!!avatar}>
           <img
-            bind:this={imageEl}
-            src={defaultUploadImage}
+            src={avatar || defaultUploadImage}
             class:default={!avatar}
             alt="Avatar"
           />
@@ -175,25 +230,35 @@
 
         <div class="flex">
           {#if avatar}
-            <button type="button" class="btn" onclick={removeImg}>
-              Remove image
-            </button>
-            <button type="button" class="btn" onclick={changeImg}>
-              Change image
-            </button>
+            <button type="button" class="btn" onclick={removeImg}
+              >Remove image</button
+            >
+            <button type="button" class="btn" onclick={changeImg}
+              >Change image</button
+            >
           {:else}
             <p>Drag and drop or click to upload</p>
           {/if}
         </div>
       </div>
-
-      <small>
-        <img src="/images/icon-info.svg" alt="" />
-        Upload your photo (JPG or PNG, max size: 5MB).
+      <small class:error={!!errors.avatar}>
+        {errors.avatar
+          ? errors.avatar
+          : `Upload your photo (JPG or PNG, max size: 5MB).`}
       </small>
 
       <label for="fullname"> Full Name </label>
-      <input bind:value={name} id="fullname" type="text" />
+      <input
+        bind:value={name}
+        id="fullname"
+        type="text"
+        class:error-input={!!errors.name}
+      />
+      {#if errors.name}
+        <small class="error">
+          {errors.name}
+        </small>
+      {/if}
 
       <label for="email"> Email Address </label>
       <input
@@ -201,7 +266,13 @@
         id="email"
         type="email"
         placeholder="example@email.com"
+        class:error-input={!!errors.email}
       />
+      {#if errors.email}
+        <small class="error">
+          {errors.email}
+        </small>
+      {/if}
 
       <label for="github"> GitHub Username </label>
       <input
@@ -209,50 +280,42 @@
         id="github"
         type="text"
         placeholder="@yourusername"
+        class:error-input={!!errors.github}
       />
+      {#if errors.github}
+        <small class="error">
+          {errors.github}
+        </small>
+      {/if}
 
-      <button type="submit" class="submit-button" onclick={handleSubmit}>
-        Generate My Ticket
-      </button>
+      <!-- REMOVED onclick={handleSubmit} TO PREVENT DOUBLE FIRING -->
+      <button type="submit" class="submit-button"> Generate My Ticket </button>
     </form>
-
-    <!-- Form ends -->
   {:else if avatar}
-    <!-- Generated tickets starts -->
     <div class="ticket">
       <div class="details">
         <div class="header flex">
           <img src="/images/logo-mark.svg" alt="Logo Mark" />
-
           <div class="stack">
             <p class="org">Coding Conf</p>
             <p class="details">Jan 31, 2025 / Austin, TX</p>
           </div>
         </div>
-
         <div class="footer flex">
           <div class="avatar-container">
-            <img src={String(avatar)} alt="Avatar" />
+            <img src={avatar || ""} alt="Avatar" />
           </div>
-
           <div class="stack">
-            <p class="name">
-              {name}
-            </p>
+            <p class="name">{name}</p>
             <p class="github flex">
               <img src="/images/icon-github.svg" alt="github logo" />
-              {github}
+              @{github}
             </p>
           </div>
         </div>
       </div>
-
-      <div class="tail">#01609</div>
-      <!-- <div class="tail"> -->
-      <!--   #{Math.floor(Math.random() * 100000)} -->
-      <!-- </div> -->
+      <div class="tail">#{Math.floor(Math.random() * 100000)}</div>
     </div>
-    <!-- Generated tickets ends -->
   {/if}
 </main>
 

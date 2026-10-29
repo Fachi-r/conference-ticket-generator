@@ -424,6 +424,9 @@ main {
 
 form {
   --border: hsl(from var(--color-neutral-300) h s l / 50%);
+  --border-error: hsl(
+    from var(--color-orange-500) h calc(s - 10) calc(l + 5) / 80%
+  );
   --bg: hsl(from var(--color-neutral-300) h s l / 10%);
   --border-radius: 0.75rem;
 
@@ -448,7 +451,7 @@ form {
 
     padding-block: 1.125rem;
     padding-inline: 1.5rem;
-    margin-block: 0.75rem;
+    margin-top: 0.75rem;
 
     border: 2px dashed var(--border);
     border-radius: 0.75rem;
@@ -458,6 +461,10 @@ form {
 
     backdrop-filter: blur(var(--blur));
     -webkit-backdrop-filter: blur(var(--blur));
+
+    &.error-input {
+      border-color: var(--border-error);
+    }
 
     .avatar-container {
       display: grid;
@@ -475,7 +482,10 @@ form {
       transition: all 0.3s ease;
 
       &.active {
-        border: 1px solid var(--border);
+        border-color: var(--border);
+      }
+      &.error {
+        border-color: var(--border-error);
       }
 
       img {
@@ -520,6 +530,23 @@ form {
     font-weight: bold;
 
     margin-bottom: 0.125rem;
+    margin-top: 0.75rem;
+
+    &::before {
+      content: "";
+      display: inline-block;
+      aspect-ratio: 1/1;
+      width: 1rem;
+
+      mask-image: url("/images/icon-info.svg");
+      mask-size: contain;
+      mask-repeat: no-repeat;
+      background-color: currentColor;
+    }
+
+    &.error {
+      color: hsl(from var(--border-error) h s l / 70%);
+    }
   }
 
   input {
@@ -530,15 +557,14 @@ form {
     color: hsl(from var(--color-neutral) h s l / 80%);
 
     font-size: 1.1em;
-    /* font-weight: 400; */
 
     &::placeholder {
       color: var(--color-neutral-300);
       font-weight: 400;
     }
 
-    &:not(&:last-of-type) {
-      margin-bottom: 0.125rem;
+    &.error-input {
+      border-color: var(--border-error);
     }
   }
 
