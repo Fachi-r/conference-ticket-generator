@@ -428,6 +428,7 @@ form {
     from var(--color-orange-500) h calc(s - 10) calc(l + 5) / 80%
   );
   --bg: hsl(from var(--color-neutral-300) h s l / 10%);
+  --bg-hover: hsl(from var(--color-neutral-300) h s l / 25%);
   --border-radius: 0.75rem;
 
   display: grid;
@@ -466,6 +467,7 @@ form {
     border: 2px dashed var(--border);
     border-radius: 0.75rem;
     background: var(--bg);
+    transition: background 0.2s ease;
 
     --blur: 2px;
 
@@ -474,6 +476,11 @@ form {
 
     &.error-input {
       border-color: var(--border-error);
+    }
+
+    &:hover {
+      cursor: pointer;
+      background: var(--bg-hover);
     }
 
     .avatar-container {
@@ -567,6 +574,7 @@ form {
     color: hsl(from var(--color-neutral) h s l / 80%);
 
     font-size: 1.1em;
+    transition: background 0.2s ease;
 
     &::placeholder {
       color: var(--color-neutral-300);
@@ -575,6 +583,11 @@ form {
 
     &.error-input {
       border-color: var(--border-error);
+    }
+
+    &:hover {
+      cursor: pointer;
+      background: var(--bg-hover);
     }
   }
 
@@ -587,9 +600,13 @@ form {
     border-radius: var(--border-radius);
     font-weight: 800;
     font-size: 1.25em;
+    transition:
+      background-color 0.2s ease,
+      box-shadow 0.2s ease;
 
     &:hover {
       background-color: var(--color-orange-700);
+      box-shadow: 0 4px 0 0 var(--color-orange-500);
     }
     &:focus-visible {
       outline: 1px solid var(--color-neutral-300);

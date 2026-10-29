@@ -1,6 +1,6 @@
 <script lang="ts">
   // Form state
-    let avatar = $state<string | null>("");
+  let avatar = $state<string | null>("");
   let name = $state("");
   let email = $state("");
   let github = $state("");
