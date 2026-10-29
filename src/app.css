@@ -1,14 +1,11 @@
-/*
-  Josh's Custom CSS Reset
-  https://www.joshwcomeau.com/css/custom-css-reset/
-*/
-
+/* ==========================================================================
+   1. RESET & BASE
+   ========================================================================== */
 *,
 *::before,
 *::after {
   box-sizing: border-box;
 }
-
 *:not(dialog) {
   margin: 0;
 }
@@ -21,6 +18,7 @@
 
 body {
   -webkit-font-smoothing: antialiased;
+  background-color: var(--color-neutral-900); /* Added to prevent white flash */
 }
 
 img,
@@ -38,7 +36,6 @@ textarea,
 select {
   font: inherit;
 }
-
 p,
 h1,
 h2,
@@ -48,7 +45,6 @@ h5,
 h6 {
   overflow-wrap: break-word;
 }
-
 #root,
 #__next {
   isolation: isolate;
@@ -61,29 +57,73 @@ h6 {
   font-style: normal;
 }
 
+/* ==========================================================================
+   2. VARIABLES (Responsive via Media Query at the root)
+   ========================================================================== */
 :root {
+  /* Colors */
   --color-neutral: hsl(0, 0%, 100%);
   --color-neutral-300: hsl(252, 6%, 83%);
   --color-neutral-500: hsl(245, 15%, 58%);
   --color-neutral-700: hsl(245, 19%, 35%);
   --color-neutral-900: hsl(248, 70%, 10%);
-
   --color-orange-500: hsl(7, 88%, 67%);
   --color-orange-700: hsl(7, 71%, 60%);
+  --border-error: hsl(
+    from var(--color-orange-500) h calc(s - 10) calc(l + 5) / 80%
+  );
 
+  /* Theme */
   --text-gradient: 45deg, hsl(7, 86%, 67%), hsl(0, 0%, 100%);
+  --bg-glass: hsl(from var(--color-neutral-300) h s l / 10%);
+  --bg-glass-hover: hsl(from var(--color-neutral-300) h s l / 25%);
+  --border-glass: hsl(from var(--color-neutral-300) h s l / 50%);
+  --radius: 0.75rem;
 
+  /* Typography */
   --sans: "Inconsolata", sans-serif;
-  --heading: system-ui, "Segoe UI", Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
 
+  /* Responsive Layout Variables (Mobile First) */
+  --logo-height: 1.5rem;
+  --logo-mb: 2.5rem;
+  --heading-size: 1.9em;
+  --heading-max-w: none;
+  --subtitle-size: 1.2em;
+  --subtitle-pb: 1.5rem;
+  --subtitle-max-w: none;
+  --ticket-mt: 2.75rem;
+  --ticket-pad: 1.125rem 1rem;
+  --ticket-avatar-w: 2.75rem;
+  --ticket-name-size: 1.2em;
+  --ticket-tail-size: 1.375em;
+}
+
+@media (width >= 720px) {
+  :root {
+    --logo-height: 1.875rem;
+    --logo-mb: 3.75rem;
+    --heading-size: 3.75em;
+    --heading-max-w: 30ch;
+    --subtitle-size: 1.45em;
+    --subtitle-pb: 1.75rem;
+    --subtitle-max-w: 35rem;
+    --ticket-mt: 5rem;
+    --ticket-pad: 1.75rem 1.5rem;
+    --ticket-avatar-w: 5rem;
+    --ticket-name-size: 1.9em;
+    --ticket-tail-size: 1.9em;
+  }
+}
+
+/* ==========================================================================
+   3. GLOBAL & LAYOUT
+   ========================================================================== */
+body {
   color: var(--color-neutral);
   font-family: var(--sans);
   font-weight: 600;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
 .attribution {
@@ -97,9 +137,11 @@ h6 {
 
 .background {
   position: fixed;
+  inset: 0; /* Modern shorthand for top:0; right:0; bottom:0; left:0 */
   width: 100%;
   height: 100%;
   z-index: -10;
+  overflow: hidden; /* Prevents scrollbars from absolute elements */
 
   & > * {
     position: absolute;
@@ -107,22 +149,20 @@ h6 {
 
   .background-image {
     position: fixed;
-    bottom: 0;
-    right: 0;
-
-    height: 100%;
+    inset: auto 0 0 auto; /* Modern shorthand for bottom:0; right:0 */
     width: 100%;
+    height: 100%;
     object-fit: cover;
   }
 
   .squiggly-line {
+    position: fixed;
     &.top {
       height: 3.5rem;
       top: 1.5rem;
       right: 0;
     }
     &.bottom {
-      position: fixed;
       bottom: 0;
       height: 13rem;
     }
@@ -133,8 +173,7 @@ h6 {
     position: absolute;
     width: 100vw;
     height: 75rem;
-    background-image: url("/images/pattern-lines.svg");
-    background-repeat: repeat-x;
+    background: url("/images/pattern-lines.svg") repeat-x;
     background-size: 60rem;
   }
 
@@ -146,12 +185,10 @@ h6 {
     &:first-of-type {
       top: -1.75rem;
       left: -4.25%;
-      /* border: 1px solid red; */
     }
     &:last-of-type {
       top: 55%;
       left: 85%;
-      /* border: 1px solid green; */
     }
   }
 
@@ -162,14 +199,11 @@ h6 {
         height: unset;
       }
       &.bottom {
-        /* bottom: 6.5rem; */
         height: unset;
       }
     }
-
     .pattern-circle {
       width: fit-content;
-
       &:first-of-type {
         top: -5rem;
         left: 3%;
@@ -179,23 +213,23 @@ h6 {
         left: 65%;
       }
     }
-
     .patterns::after {
       background-size: unset;
     }
   }
 }
 
+/* ==========================================================================
+   4. MAIN CONTENT
+   ========================================================================== */
 main {
   display: grid;
   place-items: center;
   overscroll-behavior: none;
 
   .logo {
-    height: 1.5rem;
-    margin-block-start: 2rem;
-    margin-block-end: 2.5rem;
-
+    height: var(--logo-height);
+    margin-block: 2rem var(--logo-mb);
     img {
       width: 100%;
       height: 100%;
@@ -204,7 +238,8 @@ main {
   }
 
   .heading {
-    font-size: 1.9em;
+    font-size: var(--heading-size);
+    max-width: var(--heading-max-w);
     font-weight: 800;
     letter-spacing: -1px;
     line-height: 1.1;
@@ -219,16 +254,20 @@ main {
   }
 
   .subtitle {
-    font-size: 1.2em;
-    padding-block: 1.25rem 1.5rem;
+    font-size: var(--subtitle-size);
+    padding-block: 1.25rem var(--subtitle-pb);
     padding-inline: 1rem;
     text-align: center;
     color: var(--color-neutral-300);
     line-height: 1.25;
-    /* max-width: 48ch; */
+    /* max-width: var(--subtitle-max-w); */
 
     span {
       color: hsl(from var(--color-orange-500) h calc(s - 10) calc(l + 5) / 80%);
+    }
+
+    &.isValid {
+      max-width: var(--subtitle-max-w); /* Handled by variable now */
     }
   }
 
@@ -236,19 +275,15 @@ main {
     display: flex;
     position: relative;
     justify-content: space-between;
-    background: url("/images/pattern-ticket.svg");
+    background: url("/images/pattern-ticket.svg") no-repeat;
     background-size: contain;
-    background-repeat: no-repeat;
-
-    margin-block-start: 2.75rem;
-    padding: 1.125rem 1rem;
+    margin-block-start: var(--ticket-mt);
+    padding: var(--ticket-pad);
     width: calc(100% - 2rem);
     aspect-ratio: 16/7.5;
     max-width: 38rem;
 
-    /* border: 1px solid green; */
-
-    *.flex {
+    .flex {
       display: flex;
       align-items: start;
     }
@@ -261,7 +296,6 @@ main {
 
       .header {
         gap: 1rem;
-
         img {
           width: 1.75rem;
         }
@@ -288,10 +322,9 @@ main {
 
         .avatar-container {
           aspect-ratio: 1/1;
-          width: 2.75rem;
+          width: var(--ticket-avatar-w);
           border-radius: 0.5rem;
           overflow: hidden;
-
           img {
             width: 100%;
             height: 100%;
@@ -307,10 +340,9 @@ main {
           height: 100%;
 
           .name {
-            font-size: 1.2em;
+            font-size: var(--ticket-name-size);
             font-weight: 500;
             letter-spacing: -1px;
-
             max-width: 15ch;
             text-overflow: ellipsis;
             white-space: nowrap;
@@ -326,7 +358,6 @@ main {
             display: flex;
             gap: 0.25rem;
             align-items: center;
-
             font-size: 0.9em;
             font-weight: 500;
             color: var(--color-neutral-300);
@@ -342,71 +373,38 @@ main {
       translate: 0% -50%;
       rotate: 90deg;
       transform-origin: center;
-      font-size: 1.375em;
+      font-size: var(--ticket-tail-size);
       font-weight: 500;
       color: var(--color-neutral-500);
     }
   }
 
   @media (width >= 720px) {
-    .logo {
-      height: 1.875rem;
-      margin-block-start: 2.5rem;
-      margin-block-end: 3.75rem;
-    }
-    .heading {
-      font-size: 3.75em;
-      line-height: 1.1;
-      max-width: 30ch;
-    }
-    .subtitle {
-      font-size: 1.45em;
-      padding-block: 2.5rem 1.75rem;
-
-      &.valid {
-        max-width: 35rem;
-      }
-    }
-
     .ticket {
-      margin-block-start: 5rem;
-      padding: 1.75rem 1.5rem;
       .details {
         .header {
           img {
             width: 2.5rem;
           }
-
           .stack {
             .org {
               font-size: 2.5em;
-              /* text-box-trim: trim-start; */
             }
             .details {
               font-size: 1.2em;
             }
           }
         }
-
         .footer {
           gap: 1rem;
-
           .avatar-container {
-            width: 5rem;
             border-radius: 0.75rem;
           }
-
           .stack {
             gap: 0.5rem;
-
-            .name {
-              font-size: 1.9em;
-            }
-
             img {
               width: 1.5rem;
             }
-
             .github {
               gap: 0.5rem;
               font-size: 1.2em;
@@ -416,30 +414,24 @@ main {
       }
       .tail {
         margin-right: 0.5rem;
-        font-size: 1.9em;
       }
     }
   }
 }
 
+/* ==========================================================================
+   5. FORM
+   ========================================================================== */
 form {
-  --border: hsl(from var(--color-neutral-300) h s l / 50%);
-  --border-error: hsl(
-    from var(--color-orange-500) h calc(s - 10) calc(l + 5) / 80%
-  );
-  --bg: hsl(from var(--color-neutral-300) h s l / 10%);
-  --bg-hover: hsl(from var(--color-neutral-300) h s l / 25%);
-  --border-radius: 0.75rem;
-
   display: grid;
   max-width: 30rem;
   width: 100%;
   padding: 1rem;
 
+  /* Grouped focus states for DRYness */
   *:focus-visible {
     outline: 2px solid var(--color-neutral-500);
     outline-offset: 3px;
-
     &.error,
     &.error-input {
       outline-color: var(--border-error);
@@ -451,65 +443,57 @@ form {
     font-size: 1.225em;
   }
   label {
-    padding-block-start: 1.5rem;
-    padding-block-end: 0.75rem;
+    padding-block: 1.5rem 0.75rem;
+  }
+
+  /* Grouped hover states for DRYness */
+  .upload-container,
+  input {
+    transition: background 0.2s ease;
+    &:hover {
+      cursor: pointer;
+      background: var(--bg-glass-hover);
+    }
   }
 
   .upload-container {
     display: grid;
     gap: 1rem;
     place-items: center;
-
-    padding-block: 1.125rem;
-    padding-inline: 1.5rem;
+    padding: 1.125rem 1.5rem;
     margin-top: 0.75rem;
-
-    border: 2px dashed var(--border);
-    border-radius: 0.75rem;
-    background: var(--bg);
-    transition: background 0.2s ease;
-
-    --blur: 2px;
-
-    backdrop-filter: blur(var(--blur));
-    -webkit-backdrop-filter: blur(var(--blur));
+    border: 2px dashed var(--border-glass);
+    border-radius: var(--radius);
+    background: var(--bg-glass);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
 
     &.error-input {
       border-color: var(--border-error);
     }
 
-    &:hover {
-      cursor: pointer;
-      background: var(--bg-hover);
-    }
-
     .avatar-container {
       display: grid;
       place-items: center;
-
-      border: 1px solid hsl(from var(--border) h s l / 20%);
-      border-radius: var(--border-radius);
-      background: var(--bg);
-      /* box-shadow: 0px 2px 2px hsl(0 0 0 / 30%); */
-
+      border: 1px solid hsl(from var(--border-glass) h s l / 20%);
+      border-radius: var(--radius);
+      background: var(--bg-glass);
       aspect-ratio: 1/1;
       width: 3rem;
       overflow: hidden;
-
       transition: all 0.3s ease;
 
       &.active {
-        border-color: var(--border);
+        border-color: var(--border-glass);
       }
       &.error {
         border-color: var(--border-error);
       }
 
       img {
-        object-fit: cover;
         width: 100%;
         height: 100%;
-
+        object-fit: cover;
         &.default {
           padding: 0.5rem;
         }
@@ -517,7 +501,7 @@ form {
     }
 
     .flex button {
-      background: var(--bg);
+      background: var(--bg-glass);
       color: var(--color-neutral-300);
       border: none;
       border-radius: 0.25rem;
@@ -545,19 +529,14 @@ form {
     color: var(--color-neutral-500);
     font-size: 0.725em;
     font-weight: bold;
-
-    margin-bottom: 0.125rem;
-    margin-top: 0.75rem;
+    margin-block: 0.75rem 0.125rem;
 
     &::before {
       content: "";
       display: inline-block;
       aspect-ratio: 1/1;
       width: 1rem;
-
-      mask-image: url("/images/icon-info.svg");
-      mask-size: contain;
-      mask-repeat: no-repeat;
+      mask: url("/images/icon-info.svg") center / contain no-repeat; /* Modern shorthand */
       background-color: currentColor;
     }
 
@@ -567,14 +546,12 @@ form {
   }
 
   input {
-    border: 1px solid var(--border);
-    border-radius: var(--border-radius);
-    background: var(--bg);
+    border: 1px solid var(--border-glass);
+    border-radius: var(--radius);
+    background: var(--bg-glass);
     padding: 1rem;
     color: hsl(from var(--color-neutral) h s l / 80%);
-
     font-size: 1.1em;
-    transition: background 0.2s ease;
 
     &::placeholder {
       color: var(--color-neutral-300);
@@ -583,11 +560,9 @@ form {
 
     &.error-input {
       border-color: var(--border-error);
-    }
-
-    &:hover {
-      cursor: pointer;
-      background: var(--bg-hover);
+      &::placeholder {
+        color: hsl(from var(--border-error) h s l / 70%);
+      }
     }
   }
 
@@ -597,7 +572,7 @@ form {
     background-color: var(--color-orange-500);
     color: var(--color-neutral-900);
     border: none;
-    border-radius: var(--border-radius);
+    border-radius: var(--radius);
     font-weight: 800;
     font-size: 1.25em;
     transition:
